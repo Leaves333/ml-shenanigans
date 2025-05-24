@@ -1,5 +1,6 @@
 from pybooru import Danbooru
 from urllib.request import urlretrieve
+import sqlite3
 
 search_tags = "shirakami_fubuki"
 client = Danbooru('danbooru')
