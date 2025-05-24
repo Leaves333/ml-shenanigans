@@ -18,12 +18,13 @@ def create_model() -> keras.Sequential:
 
     return model
 
-def create_database_cursor() -> sqlite3.Cursor:
+def create_table_if_it_doesnt_exist():
     con = sqlite3.connect("images.db")
     cur = con.cursor()
     cur.execute("""
         CREATE TABLE IF NOT EXISTS images (
-            hash INTEGER PRIMARY KEY,
+            id INTEGER PRIMARY KEY,
+            hash TEXT,
             tag_string_general TEXT,
             tag_string_character TEXT,
             tag_string_copyright TEXT,
@@ -31,5 +32,3 @@ def create_database_cursor() -> sqlite3.Cursor:
             tag_string_meta TEXT
         )
     """)
-
-    return cur;
