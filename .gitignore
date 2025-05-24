@@ -1,2 +1,5 @@
-.venv/*
+.venv
+images
 __pycache__
+image_links.txt
+posts.json
