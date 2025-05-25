@@ -4,7 +4,7 @@ import sqlite3
 import utils
 import os
 
-search_tags = "shirakami_fubuki"
+search_tags = "nekomata_okayu"
 client = Danbooru('danbooru')
 posts = client.post_list(tags=search_tags, random=True, limit=100)
 
@@ -23,6 +23,10 @@ for post in posts:
     
     # filter for only jpgs
     if (post["file_ext"] != "jpg"):
+        continue
+
+    # filter out posts that can't be downloaded?
+    if ("file_url" not in post):
         continue
 
     # filter out posts with low score
@@ -53,12 +57,11 @@ for post in posts:
     # write metadata about the image into sqlite database
     sql_command = f"""
         INSERT INTO images VALUES
-            ({id}, '{image_hash}', '{tags_general}', '{tags_character}',
-            '{tags_copyright}', '{tags_artist}', '{tags_meta}')
+            (?, ?, ?, ?, ?, ?, ?)
     """
-    print(f"executing:\n{sql_command}")
+    sql_data = (id, image_hash, tags_general, tags_character, tags_copyright, tags_artist, tags_meta);
 
     con = sqlite3.connect("images.db")
     cur = con.cursor()
-    cur.execute(sql_command)
+    cur.execute(sql_command, sql_data)
     con.commit()
