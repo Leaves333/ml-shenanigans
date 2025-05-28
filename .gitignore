@@ -1,9 +1,10 @@
 .venv
 images
+backups
 __pycache__
 image_links.txt
+last_used_id.txt
 posts.json
 images.db
-last_used_id.txt
 image_data.npy
-backups
+test.py

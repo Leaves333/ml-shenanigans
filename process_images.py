@@ -1,6 +1,14 @@
 import numpy as np
 import os
+import sqlite3
 from PIL import Image
+from numpy._core.multiarray import dtype
+
+TARGET_TAGS = ["izuna_(blue_archive)",
+               "arona_(blue_archive)",
+               "kisaki_(blue_archive)",
+               "shiroko_(blue_archive)",
+               "plana_(blue_archive)"]
 
 # gets an image's id in the database from its filename
 def get_id_from_filepath(image_path: str) -> int:
@@ -17,8 +25,6 @@ def resize_image(image_path: str):
 
 # converts an image to an 128x128x3 array, containing the rgb values of each pixel
 def convert_image_to_array(image_path: str):
-
-    print(image_path)
 
     img = resize_image(image_path)
     arr = np.zeros((128, 128, 3), dtype=np.uint8)
@@ -39,21 +45,41 @@ def convert_image_to_array(image_path: str):
                 arr[i][j][2] = pixel
     return arr
 
-def process_image_data():
+# queries the sql database to get the tags for an image
+# and then finds the idx of that tag in the target tags array
+def get_image_tag_index(image_path: str):
+    image_id = get_id_from_filepath(image_path)
+    sql_command = f"""
+        SELECT tag_string_character FROM images
+            WHERE id=?
+    """
+
+    con = sqlite3.connect("images.db")
+    cur = con.cursor()
+    res = cur.execute(sql_command, [image_id])
+    res_tuple: str = res.fetchone()
+    tags = res_tuple[0].split()
+
+    for tag in tags:
+        if tag in TARGET_TAGS:
+            return TARGET_TAGS.index(tag)
+
+def process_data():
+
     image_paths = os.listdir("images")
-    arr = np.zeros((len(image_paths), 128, 128, 3), dtype=np.uint8)
+    image_arr = np.zeros((len(image_paths), 128, 128, 3), dtype=np.uint8)
+    tag_arr = np.zeros((len(image_paths)), dtype=np.uint8)
+
     for i in range(len(image_paths)):
         path = image_paths[i]
-        arr[i] = convert_image_to_array(f"images/{path}")
+        image_arr[i] = convert_image_to_array(f"images/{path}")
 
-    np.save("image_data.npy", arr)
+
+    np.save("image_data.npy", image_arr)
     print("image data successfully saved!")
-    return arr
-
-IMAGE_PATH = "images/679cd0fa56e8296a174cc33dd99b1a36_51.jpg"
 
 print("process images running!")
-process_image_data()
+process_data()
 
 # resized_image = resize_image(IMAGE_PATH)
 # arr = convert_image_to_array(resized_image)
