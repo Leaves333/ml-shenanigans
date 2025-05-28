@@ -7,7 +7,7 @@ import os
 TARGET_TAGS = ["izuna_(blue_archive)",
                "arona_(blue_archive)",
                "kisaki_(blue_archive)",
-               "shiroko_(blue_archive)"
+               "shiroko_(blue_archive)",
                "plana_(blue_archive)"]
 
 def download_images_by_tag(tags: str):
