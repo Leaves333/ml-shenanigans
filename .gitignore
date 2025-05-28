@@ -2,9 +2,11 @@
 images
 backups
 __pycache__
+
+images.db
+posts.json
+image_data.npy
+tag_data.npy
+test.py
 image_links.txt
 last_used_id.txt
-posts.json
-images.db
-image_data.npy
-test.py

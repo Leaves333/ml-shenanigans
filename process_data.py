@@ -2,7 +2,6 @@ import numpy as np
 import os
 import sqlite3
 from PIL import Image
-from numpy._core.multiarray import dtype
 
 TARGET_TAGS = ["izuna_(blue_archive)",
                "arona_(blue_archive)",
@@ -31,10 +30,7 @@ def convert_image_to_array(image_path: str):
 
     for i in range(128):
         for j in range(128):
-
-            # NOTE: the code error doesn't actually cause problems
-
-            pixel: tuple[int, int, int]  = img.getpixel((i, j))
+            pixel = img.getpixel((i, j))
             if (type(pixel) == tuple):
                 arr[i][j][0] = pixel[0]
                 arr[i][j][1] = pixel[1]
@@ -47,15 +43,14 @@ def convert_image_to_array(image_path: str):
 
 # queries the sql database to get the tags for an image
 # and then finds the idx of that tag in the target tags array
-def get_image_tag_index(image_path: str):
+def get_image_tag_index(connection: sqlite3.Connection, image_path: str) -> int:
     image_id = get_id_from_filepath(image_path)
     sql_command = f"""
         SELECT tag_string_character FROM images
             WHERE id=?
     """
 
-    con = sqlite3.connect("images.db")
-    cur = con.cursor()
+    cur = connection.cursor()
     res = cur.execute(sql_command, [image_id])
     res_tuple: str = res.fetchone()
     tags = res_tuple[0].split()
@@ -63,6 +58,9 @@ def get_image_tag_index(image_path: str):
     for tag in tags:
         if tag in TARGET_TAGS:
             return TARGET_TAGS.index(tag)
+
+    # WARN: this should never happen
+    return -1 
 
 def process_data():
 
@@ -72,13 +70,17 @@ def process_data():
 
     for i in range(len(image_paths)):
         path = image_paths[i]
+        print(f"processing: {path}")
         image_arr[i] = convert_image_to_array(f"images/{path}")
 
+        con = sqlite3.connect("images.db")
+        tag_arr[i] = get_image_tag_index(con, f"images/{path}")
 
     np.save("image_data.npy", image_arr)
-    print("image data successfully saved!")
+    np.save("tag_data.npy", tag_arr)
+    print("data successfully saved!")
 
-print("process images running!")
+print("process data running!")
 process_data()
 
 # resized_image = resize_image(IMAGE_PATH)
