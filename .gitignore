@@ -1,6 +1,7 @@
 .venv
-images
 backups
+images
+training
 __pycache__
 
 images.db
