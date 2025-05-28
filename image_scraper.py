@@ -4,7 +4,7 @@ import sqlite3
 import utils
 import os
 
-search_tags = "nekomata_okayu"
+search_tags = "hololive"
 client = Danbooru('danbooru')
 posts = client.post_list(tags=search_tags, random=True, limit=100)
 
@@ -30,7 +30,7 @@ for post in posts:
         continue
 
     # filter out posts with low score
-    if (post["score"] < 20):
+    if (post["score"] < 30):
         continue
 
     # get next id to use
