@@ -2,7 +2,7 @@ import tensorflow as tf
 import keras
 import os
 
-from utils import create_model
+from utils import create_demo_model
 
 print("script running !!")
 print("tensorflow version: ", tf.version.VERSION)
@@ -13,7 +13,7 @@ mnist = keras.datasets.mnist
 train_images, test_images = train_images / 255.0, test_images / 255.0
 
 # train the model for some time
-model = create_model()
+model = create_demo_model()
 print()
 print(model.summary())
 

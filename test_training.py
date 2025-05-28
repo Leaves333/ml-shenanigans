@@ -1,12 +1,12 @@
 import keras
-from utils import create_model
+from utils import create_demo_model
 
 # grab mnist data set
 mnist = keras.datasets.mnist
 (train_images, train_labels), (test_images, test_labels) = mnist.load_data()
 train_images, test_images = train_images / 255.0, test_images / 255.0
 
-model = create_model()
+model = create_demo_model()
 
 # evaluate the model
 print()
