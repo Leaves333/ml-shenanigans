@@ -37,8 +37,9 @@ def create_model() -> keras.Sequential:
     model = keras.models.Sequential([
         keras.layers.Input(shape=(128, 128, 3)),
         keras.layers.Flatten(),
-        keras.layers.Dense(1024, activation='relu'),
         keras.layers.Dense(128, activation='relu'),
+        keras.layers.Dense(128, activation='relu'),
+        keras.layers.Dense(64, activation='relu'),
         keras.layers.Dropout(0.2),
         keras.layers.Dense(5)
     ])

@@ -10,12 +10,12 @@ TARGET_TAGS = ["izuna_(blue_archive)",
                "shiroko_(blue_archive)",
                "plana_(blue_archive)"]
 
-def download_images_by_tag(tags: str):
+def download_images_by_tag(tags: str, page: int):
 
     print(f"searching for {tags}")
 
     client = Danbooru('danbooru')
-    posts = client.post_list(tags=tags, random=True, limit=100)
+    posts = client.post_list(tags=tags, page=page, limit=100)
 
     ID_FILEPATH = "last_used_id.txt"
     if not os.path.exists(ID_FILEPATH):
@@ -85,4 +85,5 @@ def download_images_by_tag(tags: str):
         con.commit()
 
 for tag in TARGET_TAGS:
-    download_images_by_tag(tag)
+    for page in range(1, 11):
+        download_images_by_tag(tag, page)
