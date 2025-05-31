@@ -1,5 +1,6 @@
 import tensorflow as tf
 import keras
+import numpy as np
 import os
 
 from utils import create_demo_model
@@ -10,6 +11,11 @@ print("tensorflow version: ", tf.version.VERSION)
 # grab mnist data set
 mnist = keras.datasets.mnist
 (train_images, train_labels), (test_images, test_labels) = mnist.load_data()
+
+train_images = np.split(train_images, [1000])[0]
+train_labels = np.split(train_labels, [1000])[0]
+test_images = np.split(test_images, [200])[0]
+test_labels = np.split(test_labels, [200])[0]
 train_images, test_images = train_images / 255.0, test_images / 255.0
 
 # train the model for some time

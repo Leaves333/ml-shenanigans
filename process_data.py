@@ -3,6 +3,7 @@ import os
 import sqlite3
 from PIL import Image
 
+IMAGE_SIZE = (28, 28)
 TARGET_TAGS = ["izuna_(blue_archive)",
                "arona_(blue_archive)",
                "kisaki_(blue_archive)",
@@ -19,17 +20,17 @@ def get_id_from_filepath(image_path: str) -> int:
 # resizes an image to 128x128
 def resize_image(image_path: str):
     with Image.open(image_path) as img:
-        resized_image = img.resize(size=(128, 128));
+        resized_image = img.resize(size=IMAGE_SIZE);
         return resized_image
 
 # converts an image to an 128x128x3 array, containing the rgb values of each pixel
 def convert_image_to_array(image_path: str):
 
     img = resize_image(image_path)
-    arr = np.zeros((128, 128, 3), dtype=np.uint8)
+    arr = np.zeros((IMAGE_SIZE[0], IMAGE_SIZE[1], 3), dtype=np.uint8)
 
-    for i in range(128):
-        for j in range(128):
+    for i in range(IMAGE_SIZE[0]):
+        for j in range(IMAGE_SIZE[1]):
             pixel = img.getpixel((i, j))
             if (type(pixel) == tuple):
                 arr[i][j][0] = pixel[0]
@@ -65,7 +66,7 @@ def get_image_tag_index(connection: sqlite3.Connection, image_path: str) -> int:
 def process_data():
 
     image_paths = os.listdir("images")
-    image_arr = np.zeros((len(image_paths), 128, 128, 3), dtype=np.uint8)
+    image_arr = np.zeros((len(image_paths), IMAGE_SIZE[0], IMAGE_SIZE[1], 3), dtype=np.uint8)
     tag_arr = np.zeros((len(image_paths)), dtype=np.uint8)
 
     for i in range(len(image_paths)):

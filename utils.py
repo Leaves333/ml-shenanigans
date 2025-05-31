@@ -35,11 +35,11 @@ def create_table_if_it_doesnt_exist():
 
 def create_model() -> keras.Sequential:
     model = keras.models.Sequential([
-        keras.layers.Input(shape=(128, 128, 3)),
+        keras.layers.Input(shape=(28, 28, 3)),
         keras.layers.Flatten(),
         keras.layers.Dense(128, activation='relu'),
-        keras.layers.Dense(128, activation='relu'),
-        keras.layers.Dense(64, activation='relu'),
+        # keras.layers.Dense(128, activation='relu'),
+        # keras.layers.Dense(64, activation='relu'),
         keras.layers.Dropout(0.2),
         keras.layers.Dense(5)
     ])
@@ -72,4 +72,5 @@ def load_training_data():
     test_images = image_arr[1]
     test_tags = tag_arr[1]
 
+    print(f"{len(train_images)} training items, {len(test_images)} testing items")
     return ((train_images, train_tags), (test_images, test_tags))

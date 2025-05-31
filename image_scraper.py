@@ -42,13 +42,6 @@ def download_images_by_tag(tags: str, page: int):
         if (post["score"] < 30):
             continue
 
-        # get next id to use
-        with open(ID_FILEPATH, "r") as file:
-            id = int(file.read())
-            id += 1
-        with open(ID_FILEPATH, "w") as file:
-            file.write(f"{id}")
-
         # get image tags
         tags_general: str = post["tag_string_general"]
         tags_character: str = post["tag_string_character"]
@@ -64,6 +57,14 @@ def download_images_by_tag(tags: str, page: int):
                 count += 1
         if count > 1:
             continue
+
+        # get next id to use
+        with open(ID_FILEPATH, "r") as file:
+            id = int(file.read())
+            id += 1
+        with open(ID_FILEPATH, "w") as file:
+            file.write(f"{id}")
+
 
         # download the image from the internet
         image_url = post["file_url"]
@@ -85,5 +86,5 @@ def download_images_by_tag(tags: str, page: int):
         con.commit()
 
 for tag in TARGET_TAGS:
-    for page in range(1, 11):
+    for page in range(11, 16):
         download_images_by_tag(tag, page)
