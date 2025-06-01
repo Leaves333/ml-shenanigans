@@ -35,13 +35,25 @@ def create_table_if_it_doesnt_exist():
 
 def create_model() -> keras.Sequential:
     model = keras.models.Sequential([
-        keras.layers.Input(shape=(28, 28, 3)),
+
+        # rescale input
+        keras.layers.Input(shape=(256, 256, 3)),
+        keras.layers.Rescaling(1/255),
+
+        # do some convolutions stuff
+        keras.layers.Conv2D(32, 3, activation='relu'),
+        keras.layers.MaxPooling2D(),
+        keras.layers.Conv2D(64, 3, activation='relu'),
+        keras.layers.MaxPooling2D(),
+
+        # flatten it and do some dense stuff
         keras.layers.Flatten(),
         keras.layers.Dense(128, activation='relu'),
-        # keras.layers.Dense(128, activation='relu'),
-        # keras.layers.Dense(64, activation='relu'),
-        keras.layers.Dropout(0.2),
-        keras.layers.Dense(5)
+
+        # prevent overfitting
+        keras.layers.Dropout(0.5),
+        keras.layers.Dense(3)
+
     ])
 
     model.compile(

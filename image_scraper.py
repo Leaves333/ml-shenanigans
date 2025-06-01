@@ -4,11 +4,16 @@ import sqlite3
 import utils
 import os
 
+# TARGET_TAGS = ["izuna_(blue_archive)",
+#                "arona_(blue_archive)",
+#                "kisaki_(blue_archive)",
+#                "shiroko_(blue_archive)",
+#                "plana_(blue_archive)"]
+
 TARGET_TAGS = ["izuna_(blue_archive)",
-               "arona_(blue_archive)",
                "kisaki_(blue_archive)",
-               "shiroko_(blue_archive)",
                "plana_(blue_archive)"]
+
 
 def download_images_by_tag(tags: str, page: int):
 
@@ -69,8 +74,11 @@ def download_images_by_tag(tags: str, page: int):
         # download the image from the internet
         image_url = post["file_url"]
         image_hash = post["md5"]
-        print(f"image found, downloading {image_hash}")
-        filename = f"images/{image_hash}_{id}.jpg"
+        character_name = tags.removesuffix("_(blue_archive)")
+        filename = f"images/{character_name}/{image_hash}_{id}.jpg"
+
+        print(f"image found, downloading to {filename}")
+        os.makedirs(os.path.dirname(filename), exist_ok=True)
         urlretrieve(image_url, filename)
 
         # write metadata about the image into sqlite database
@@ -86,5 +94,5 @@ def download_images_by_tag(tags: str, page: int):
         con.commit()
 
 for tag in TARGET_TAGS:
-    for page in range(11, 16):
+    for page in range(1, 11):
         download_images_by_tag(tag, page)
