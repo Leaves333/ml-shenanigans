@@ -40,18 +40,25 @@ def create_model() -> keras.Sequential:
         keras.layers.Input(shape=(256, 256, 3)),
         keras.layers.Rescaling(1/255),
 
+        # data augmentation
+        keras.layers.RandomFlip("horizontal"),
+        keras.layers.RandomRotation(0.1),
+        keras.layers.RandomZoom(0.1),
+
         # do some convolutions stuff
         keras.layers.Conv2D(32, 3, activation='relu'),
         keras.layers.MaxPooling2D(),
+        keras.layers.Dropout(0.2),
+
         keras.layers.Conv2D(64, 3, activation='relu'),
         keras.layers.MaxPooling2D(),
+        keras.layers.Dropout(0.3),
 
         # flatten it and do some dense stuff
         keras.layers.Flatten(),
         keras.layers.Dense(128, activation='relu'),
-
-        # prevent overfitting
         keras.layers.Dropout(0.5),
+
         keras.layers.Dense(3)
 
     ])
